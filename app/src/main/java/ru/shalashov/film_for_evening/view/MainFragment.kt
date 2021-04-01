@@ -1,68 +1,84 @@
 package ru.shalashov.film_for_evening.view
 
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.Observer
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.Snackbar
-import ru.shalashov.film_for_evening.databinding.MainFragmentBinding
+import ru.shalashov.film_for_evening.R
+import ru.shalashov.film_for_evening.adapter.MainFragmentAdapter
+import ru.shalashov.film_for_evening.databinding.FragmentMainBinding
 import ru.shalashov.film_for_evening.model.Film
 import ru.shalashov.film_for_evening.viewModel.AppState
 import ru.shalashov.film_for_evening.viewModel.MainViewModel
 
-class MainFragment : Fragment() {
+class MainFragment: Fragment() {
 
-    private var _binding: MainFragmentBinding? = null
+    private var _binding: FragmentMainBinding? = null
     private val binding get() = _binding!!
+
     private lateinit var viewModel: MainViewModel
+    private val adapter = MainFragmentAdapter(object: OnItemViewClickListener{
+        override fun onItemViewClick(film: Film) {
+            val manager = activity?.supportFragmentManager
+            if (manager != null) {
+                val bundle = Bundle()
+                bundle.putParcelable(DetailsFragment.BUNDLE_EXTRA, film)
+                manager.beginTransaction()
+                    .add(R.id.container, DetailsFragment.newInstance(bundle))
+                    .addToBackStack("")
+                    .commitAllowingStateLoss()
+            }
+        }
+    })
 
-    companion object {
-        fun newInstance() = MainFragment()
-    }
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View {
-        _binding = MainFragmentBinding.inflate(inflater, container, false)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentMainBinding.inflate(inflater, container, false)
         return binding.root
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding.rvMainFragHorrors.adapter = adapter
+        binding.rvMainFragCartoons.adapter = adapter
         viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
-        viewModel.getLiveData().observe(viewLifecycleOwner, Observer { renderData(it) })
+        viewModel.getLiveData().observe(viewLifecycleOwner, { renderData(it) })
         viewModel.getFilms()
     }
 
     private fun renderData(appState: AppState) {
         when (appState) {
             is AppState.Success -> {
-                val filmData = appState.filmData
-                binding.loadingLayout.visibility = View.GONE
-                setData(filmData)
+                binding.FLFragDetailsLoading.visibility = View.GONE
+                adapter.setFilms(appState.filmData)
             }
             is AppState.Loading -> {
-                binding.loadingLayout.visibility = View.VISIBLE
+                binding.FLFragDetailsLoading.visibility = View.VISIBLE
             }
             is AppState.Error -> {
-                binding.loadingLayout.visibility = View.GONE
+                binding.FLFragDetailsLoading.visibility = View.GONE
                 Snackbar.make(binding.mainView, "Error", Snackbar.LENGTH_INDEFINITE).setAction("Reload") {viewModel.getFilms()}.show()
             }
         }
     }
 
-    private fun setData(filmData: Film) {
-        binding.tvMainFragFilmName.text = filmData.film
-        binding.tvMainFragGenreValue.text = filmData.genre
-        binding.tvMainFragCountryValue.text = filmData.country
-        binding.tvMainFragDurationValue.text = filmData.duration.toString()
-        binding.tvMainFragDescriptionValue.text = filmData.description
+    companion object {
+        fun newInstance() =
+            MainFragment()
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+    interface OnItemViewClickListener {
+        fun onItemViewClick(film: Film)
+    }
+
+    override fun onDestroy() {
+        adapter.removeListener()
+        super.onDestroy()
     }
 }
