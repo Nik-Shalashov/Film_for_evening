@@ -15,7 +15,7 @@ class MainViewModel (private val liveDataToObserve: MutableLiveData<AppState> = 
         liveDataToObserve.value = AppState.Loading
         Thread {
             sleep(1000)
-            liveDataToObserve.postValue(AppState.Success(repositoryImpl.getFilmFromServer()))
+            liveDataToObserve.postValue(AppState.Success(repositoryImpl.getAllFilmsFromServer()))
         }.start()
     }
 }
