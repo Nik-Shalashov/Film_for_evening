@@ -13,4 +13,6 @@
     <string name="poster">Poster</string>
     <string name="horrors">Horrors</string>
     <string name="cartoons">Cartoons</string>
+    <string name="error">Error!</string>
+    <string name="reload">Reload</string>
 </resources>

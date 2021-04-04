@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.android.synthetic.main.fragment_main.*
 import ru.shalashov.film_for_evening.R
 import ru.shalashov.film_for_evening.adapter.MainFragmentAdapter
 import ru.shalashov.film_for_evening.databinding.FragmentMainBinding
@@ -14,20 +15,20 @@ import ru.shalashov.film_for_evening.model.Film
 import ru.shalashov.film_for_evening.viewModel.AppState
 import ru.shalashov.film_for_evening.viewModel.MainViewModel
 
-class MainFragment: Fragment() {
+class MainFragment : Fragment() {
 
     private var _binding: FragmentMainBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var viewModel: MainViewModel
-    private val adapter = MainFragmentAdapter(object: OnItemViewClickListener{
+    private val viewModel: MainViewModel by lazy {
+        ViewModelProvider(this).get(MainViewModel::class.java)
+    }
+    private val adapter = MainFragmentAdapter(object : OnItemViewClickListener {
         override fun onItemViewClick(film: Film) {
-            val manager = activity?.supportFragmentManager
-            if (manager != null) {
-                val bundle = Bundle()
-                bundle.putParcelable(DetailsFragment.BUNDLE_EXTRA, film)
-                manager.beginTransaction()
-                    .add(R.id.container, DetailsFragment.newInstance(bundle))
+            activity?.supportFragmentManager?.apply {
+                beginTransaction().add(R.id.container, DetailsFragment.newInstance(Bundle().apply {
+                    putParcelable(DetailsFragment.BUNDLE_EXTRA, film)
+                }))
                     .addToBackStack("")
                     .commitAllowingStateLoss()
             }
@@ -47,7 +48,6 @@ class MainFragment: Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.rvMainFragHorrors.adapter = adapter
         binding.rvMainFragCartoons.adapter = adapter
-        viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
         viewModel.getLiveData().observe(viewLifecycleOwner, { renderData(it) })
         viewModel.getFilms()
     }
@@ -63,9 +63,18 @@ class MainFragment: Fragment() {
             }
             is AppState.Error -> {
                 binding.FLFragDetailsLoading.visibility = View.GONE
-                Snackbar.make(binding.mainView, "Error", Snackbar.LENGTH_INDEFINITE).setAction("Reload") {viewModel.getFilms()}.show()
+                mainView.showSnackBar(getString(R.string.error), getString(R.string.reload), {viewModel.getFilms()})
             }
         }
+    }
+
+    private fun View.showSnackBar(
+        text: String,
+        actionText: String,
+        action: (View) -> Unit,
+        length: Int = Snackbar.LENGTH_INDEFINITE
+    ) {
+        Snackbar.make(this, text, length).setAction(actionText, action).show()
     }
 
     companion object {

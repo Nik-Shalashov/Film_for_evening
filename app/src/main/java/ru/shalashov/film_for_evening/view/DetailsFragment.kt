@@ -32,10 +32,11 @@ class DetailsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val film = arguments?.getParcelable<Film>(BUNDLE_EXTRA)
+        val film = arguments?.getParcelable<Film>(BUNDLE_EXTRA)?.let { it -> setData(it) }
+        /*val film = arguments?.getParcelable<Film>(BUNDLE_EXTRA)
         if (film != null) {
             setData(film)
-        }
+        }*/
         
     }
 
