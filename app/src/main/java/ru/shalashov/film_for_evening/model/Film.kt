@@ -1,16 +1,44 @@
 package ru.shalashov.film_for_evening.model
 
+import android.os.Parcel
 import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parceler
+import kotlinx.parcelize.Parcelize
+
 
 @Parcelize
 data class Film(
-    val film: String,
-    val genre: String,
-    val country: String,
+    val film: String?,
+    val genre: String?,
+    val country: String?,
     val duration: Int,
-    val description: String
-) : Parcelable
+    val description: String?,
+    val id: Int
+) : Parcelable {
+    constructor(parcel: Parcel) : this(
+        parcel.readString(),
+        parcel.readString(),
+        parcel.readString(),
+        parcel.readInt(),
+        parcel.readString()
+    ) {
+    }
+
+    companion object : Parceler<Film> {
+
+        override fun Film.write(parcel: Parcel, flags: Int) {
+            parcel.writeString(film)
+            parcel.writeString(genre)
+            parcel.writeString(country)
+            parcel.writeInt(duration)
+            parcel.writeString(description)
+        }
+
+        override fun create(parcel: Parcel): Film {
+            return Film(parcel)
+        }
+    }
+}
 
 fun getAllFilms() = listOf(
     Film("Spudi Man", "Fantasy", "USA", 120, "Friendly neighborhood"),
