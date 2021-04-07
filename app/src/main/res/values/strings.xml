@@ -15,4 +15,6 @@
     <string name="cartoons">Cartoons</string>
     <string name="error">Error!</string>
     <string name="reload">Reload</string>
+    <string name="rating">Rating:</string>
+    <string name="rating_value">rating</string>
 </resources>
