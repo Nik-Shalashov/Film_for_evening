@@ -88,5 +88,6 @@ class MainFragment : Fragment() {
     override fun onDestroy() {
         adapter.removeListener()
         super.onDestroy()
+        _binding = null
     }
 }
