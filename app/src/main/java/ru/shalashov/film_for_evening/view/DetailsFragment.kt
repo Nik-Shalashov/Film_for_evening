@@ -3,6 +3,7 @@ package ru.shalashov.film_for_evening.view
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -14,8 +15,10 @@ import ru.shalashov.film_for_evening.model.Film
 import ru.shalashov.film_for_evening.model.FilmDTO
 import java.io.BufferedReader
 import java.io.InputStreamReader
-import java.net.HttpURLConnection
+import java.lang.Exception
+import java.net.MalformedURLException
 import java.net.URL
+import java.util.stream.Collectors
 import javax.net.ssl.HttpsURLConnection
 
 private const val YOUR_API_KEY = "14d8ed808b564c91f81edffb7d01a16e"
@@ -41,17 +44,13 @@ class DetailsFragment : Fragment() {
         return binding.root
     }
 
+    @RequiresApi(Build.VERSION_CODES.N)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        arguments?.getParcelable<Film>(BUNDLE_EXTRA)?.let { it -> setData(it) }
-    }
-
-    private fun setData(film: Film) {
-        binding.tvFragDetailsFilmName.text = film.film
-        binding.tvFragDetailsGenreValue.text = film.genre
-        binding.tvFragDetailsCountryValue.text = film.country
-        binding.tvFragDetailsDurationValue.text = film.duration.toString()
-        binding.tvFragDetailsDescriptionValue.text = film.description
+        filmBundle = arguments?.getParcelable(BUNDLE_EXTRA)?: Film()
+        binding.detailsView.visibility = View.GONE
+        binding.FLFragMainLoading.visibility = View.VISIBLE
+        loadFilm()
     }
 
     private fun displayFilm(filmDTO: FilmDTO) {
@@ -80,9 +79,23 @@ class DetailsFragment : Fragment() {
                     urlConnection.readTimeout = 20000
                     val bufferedReader = BufferedReader(InputStreamReader(urlConnection.inputStream))
                     val filmDTO: FilmDTO = Gson().fromJson(getLines(bufferedReader), FilmDTO::class.java)
+                    handler.post {displayFilm(filmDTO)}
+                } catch (e: Exception) {
+                    Log.e("", "Fail connection", e)
+                    e.printStackTrace()
+                } finally {
+                    urlConnection.disconnect()
                 }
-            })
+            }).start()
+        } catch (e: MalformedURLException) {
+            Log.e("", "Fail URL", e)
+            e.printStackTrace()
         }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.N)
+    private fun getLines(reader: BufferedReader): String {
+        return reader.lines().collect(Collectors.joining("\n"))
     }
 
     override fun onDestroyView() {
