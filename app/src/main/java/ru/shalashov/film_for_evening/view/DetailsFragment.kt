@@ -28,6 +28,15 @@ class DetailsFragment : Fragment() {
     private var _binding: FragmentDetailsBinding? = null
     private val binding get() = _binding!!
     private lateinit var filmBundle: Film
+    private val onLoadListener: FilmLoader.FilmLoaderListener = object :FilmLoader.FilmLoaderListener {
+        override fun onLoaded(filmDTO: FilmDTO) {
+            displayFilm(filmDTO)
+        }
+
+        override fun onFailed(throwable: Throwable) {
+            TODO("Not yet implemented")
+        }
+    }
 
     companion object {
         const val BUNDLE_EXTRA = "film"
@@ -50,7 +59,8 @@ class DetailsFragment : Fragment() {
         filmBundle = arguments?.getParcelable(BUNDLE_EXTRA)?: Film()
         binding.detailsView.visibility = View.GONE
         binding.FLFragMainLoading.visibility = View.VISIBLE
-        loadFilm()
+        val loader = FilmLoader(onLoadListener, filmBundle.id)
+        loader.loadFilm()
     }
 
     private fun displayFilm(filmDTO: FilmDTO) {
@@ -71,33 +81,6 @@ class DetailsFragment : Fragment() {
             tvFragDetailsDurationValue.text = filmDTO.runtime.toString()
             tvFragDetailsDescriptionValue.text = filmDTO.overview
             tvFragDetailsRatingValue.text = filmDTO.vote_average.toString()
-        }
-    }
-
-    @RequiresApi(Build.VERSION_CODES.N)
-    private fun loadFilm() {
-        try {
-            val uri = URL("https://api.themoviedb.org/3/movie/${filmBundle.id}?api_key=${YOUR_API_KEY}&language=ru")
-            val handler = Handler()
-            Thread {
-                lateinit var urlConnection: HttpsURLConnection
-                try {
-                    urlConnection = uri.openConnection() as HttpsURLConnection
-                    urlConnection.requestMethod = "GET"
-                    urlConnection.readTimeout = 20000
-                    val bufferedReader = BufferedReader(InputStreamReader(urlConnection.inputStream))
-                    val filmDTO: FilmDTO = Gson().fromJson(getLines(bufferedReader), FilmDTO::class.java)
-                    handler.post { displayFilm(filmDTO) }
-                } catch (e: Exception) {
-                    Log.e("", "Fail connection", e)
-                    e.printStackTrace()
-                } finally {
-                    urlConnection.disconnect()
-                }
-            }.start()
-        } catch (e: MalformedURLException) {
-            Log.e("", "Fail URL", e)
-            e.printStackTrace()
         }
     }
 
