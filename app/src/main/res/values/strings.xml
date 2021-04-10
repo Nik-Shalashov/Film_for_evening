@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">Film_for_evening</string>
+    <string name="lock_stock_and_two_smoking_barrels">Lock, Stock and Two Smoking Barrels</string>
+    <string name="genre">Genre:</string>
+    <string name="film_genre">film genre</string>
+    <string name="country">Country:</string>
+    <string name="countryValue">country</string>
+    <string name="duration">Duration:</string>
+    <string name="durationValue">Duration</string>
+    <string name="descriptionValue">blablabla</string>
+    <string name="description">Description:</string>
 </resources>
