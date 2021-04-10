@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/details"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    tools:context=".view.DetailsFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/detailsView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/tv_fragDetails_filmName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/lock_stock_and_two_smoking_barrels"
+            android:textSize="30sp"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_fragDetails_genre"
+            style="@style/InfoText"
+            android:text="@string/genre"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_fragDetails_filmName" />
+
+        <TextView
+            android:id="@+id/tv_fragDetails_genreValue"
+            style="@style/InfoText"
+            android:hint="@string/film_genre"
+            app:layout_constraintStart_toEndOf="@+id/tv_fragDetails_genre"
+            app:layout_constraintTop_toBottomOf="@+id/tv_fragDetails_filmName" />
+
+        <TextView
+            android:id="@+id/tv_fragDetails_country"
+            style="@style/InfoText"
+            android:text="@string/country"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_fragDetails_genre" />
+
+        <TextView
+            android:id="@+id/tv_fragDetails_countryValue"
+            style="@style/InfoText"
+            android:layout_marginTop="8dp"
+            android:hint="@string/countryValue"
+            app:layout_constraintStart_toEndOf="@+id/tv_fragDetails_country"
+            app:layout_constraintTop_toBottomOf="@+id/tv_fragDetails_genre" />
+
+        <TextView
+            android:id="@+id/tv_fragDetails_duration"
+            style="@style/InfoText"
+            android:text="@string/duration"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_fragDetails_country" />
+
+        <TextView
+            android:id="@+id/tv_fragDetails_durationValue"
+            style="@style/InfoText"
+            android:hint="@string/durationValue"
+            app:layout_constraintStart_toEndOf="@+id/tv_fragDetails_duration"
+            app:layout_constraintTop_toBottomOf="@+id/tv_fragDetails_country" />
+
+        <TextView
+            android:id="@+id/tv_fragDetails_description"
+            style="@style/InfoText"
+            android:text="@string/description"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_fragDetails_duration" />
+
+        <TextView
+            android:id="@+id/tv_fragDetails_descriptionValue"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:hint="@string/descriptionValue"
+            android:textSize="20sp"
+            app:layout_constraintTop_toBottomOf="@+id/tv_fragDetails_description"
+            tools:layout_editor_absoluteX="5dp" />
+
+        <ImageView
+            android:id="@+id/iv_fragDetails_poster"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            app:layout_constraintBottom_toTopOf="@+id/tv_fragDetails_descriptionValue"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_fragDetails_filmName"
+            app:layout_constraintVertical_bias="0.0"
+            tools:src="@tools:sample/avatars"
+            android:contentDescription="@string/poster" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</FrameLayout>
