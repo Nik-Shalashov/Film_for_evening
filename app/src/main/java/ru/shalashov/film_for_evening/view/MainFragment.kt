@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.android.synthetic.main.fragment_main.*
 import ru.shalashov.film_for_evening.R
 import ru.shalashov.film_for_evening.adapter.MainFragmentAdapter
 import ru.shalashov.film_for_evening.databinding.FragmentMainBinding
@@ -55,15 +54,15 @@ class MainFragment : Fragment() {
     private fun renderData(appState: AppState) {
         when (appState) {
             is AppState.Success -> {
-                binding.FLFragDetailsLoading.visibility = View.GONE
+                binding.FLFragMainLoading.visibility = View.GONE
                 adapter.setFilms(appState.filmData)
             }
             is AppState.Loading -> {
-                binding.FLFragDetailsLoading.visibility = View.VISIBLE
+                binding.FLFragMainLoading.visibility = View.VISIBLE
             }
             is AppState.Error -> {
-                binding.FLFragDetailsLoading.visibility = View.GONE
-                mainView.showSnackBar(getString(R.string.error), getString(R.string.reload), {viewModel.getFilms()})
+                binding.FLFragMainLoading.visibility = View.GONE
+                binding.mainView.showSnackBar(getString(R.string.error), getString(R.string.reload), {viewModel.getFilms()})
             }
         }
     }
@@ -89,5 +88,6 @@ class MainFragment : Fragment() {
     override fun onDestroy() {
         adapter.removeListener()
         super.onDestroy()
+        _binding = null
     }
 }

@@ -41,7 +41,7 @@
             style="@style/InfoText"
             android:text="@string/country"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_fragDetails_genre" />
+            app:layout_constraintTop_toBottomOf="@+id/tv_fragDetails_genreValue" />
 
         <TextView
             android:id="@+id/tv_fragDetails_countryValue"
@@ -49,28 +49,42 @@
             android:layout_marginTop="8dp"
             android:hint="@string/countryValue"
             app:layout_constraintStart_toEndOf="@+id/tv_fragDetails_country"
-            app:layout_constraintTop_toBottomOf="@+id/tv_fragDetails_genre" />
+            app:layout_constraintTop_toBottomOf="@+id/tv_fragDetails_genreValue" />
 
         <TextView
             android:id="@+id/tv_fragDetails_duration"
             style="@style/InfoText"
             android:text="@string/duration"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_fragDetails_country" />
+            app:layout_constraintTop_toBottomOf="@+id/tv_fragDetails_countryValue" />
 
         <TextView
             android:id="@+id/tv_fragDetails_durationValue"
             style="@style/InfoText"
             android:hint="@string/durationValue"
             app:layout_constraintStart_toEndOf="@+id/tv_fragDetails_duration"
-            app:layout_constraintTop_toBottomOf="@+id/tv_fragDetails_country" />
+            app:layout_constraintTop_toBottomOf="@+id/tv_fragDetails_countryValue" />
+
+        <TextView
+            android:id="@+id/tv_fragDetails_rating"
+            style="@style/InfoText"
+            android:text="@string/rating"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_fragDetails_durationValue" />
+
+        <TextView
+            android:id="@+id/tv_fragDetails_ratingValue"
+            style="@style/InfoText"
+            android:hint="@string/rating_value"
+            app:layout_constraintStart_toEndOf="@+id/tv_fragDetails_rating"
+            app:layout_constraintTop_toBottomOf="@+id/tv_fragDetails_durationValue" />
 
         <TextView
             android:id="@+id/tv_fragDetails_description"
             style="@style/InfoText"
             android:text="@string/description"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_fragDetails_duration" />
+            app:layout_constraintTop_toBottomOf="@+id/tv_fragDetails_ratingValue" />
 
         <TextView
             android:id="@+id/tv_fragDetails_descriptionValue"
@@ -82,18 +96,23 @@
             app:layout_constraintTop_toBottomOf="@+id/tv_fragDetails_description"
             tools:layout_editor_absoluteX="5dp" />
 
-        <ImageView
-            android:id="@+id/iv_fragDetails_poster"
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <FrameLayout
+        android:id="@+id/FL_fragMain_loading"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#80FFFFFF"
+        android:visibility="gone"
+        tools:layout_editor_absoluteX="-33dp"
+        tools:layout_editor_absoluteY="-16dp"
+        tools:visibility="visible">
+
+        <ProgressBar
+            style="@android:attr/progressBarStyleLarge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            app:layout_constraintBottom_toTopOf="@+id/tv_fragDetails_descriptionValue"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_fragDetails_filmName"
-            app:layout_constraintVertical_bias="0.0"
-            tools:src="@tools:sample/avatars"
-            android:contentDescription="@string/poster" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            android:layout_gravity="center" />
+    </FrameLayout>
 
 </FrameLayout>
