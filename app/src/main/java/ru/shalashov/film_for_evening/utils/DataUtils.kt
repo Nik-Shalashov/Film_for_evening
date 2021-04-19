@@ -12,5 +12,7 @@ fun convertDtoToModel(filmDTO: FilmDTO): List<Film> {
     for (i in 1 until filmDTO.production_countries.count()) {
         country += "\n${filmDTO.production_countries[i].name}"
     }
-    return listOf(Film(filmDTO.title, genre, country, filmDTO.runtime!!, filmDTO.overview!!, filmDTO.vote_average!!, filmDTO.id))
+    return listOf(Film(filmDTO.title, genre, country, filmDTO.runtime!!, filmDTO.overview!!, filmDTO.vote_average!!, filmDTO.id, filmDTO.poster_path!!))
 }
+
+//

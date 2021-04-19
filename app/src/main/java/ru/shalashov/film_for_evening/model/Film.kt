@@ -11,7 +11,8 @@ data class Film(
         val duration: Int = 0,
         val description: String = "",
         val rating: Float = 0F,
-        val id: Int = 0
+        val id: Int = 0,
+        val poster_path: String = ""
 ) : Parcelable
 
 fun getAllFilms() = listOf(

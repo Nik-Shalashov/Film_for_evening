@@ -1,19 +1,17 @@
 package ru.shalashov.film_for_evening.view
 
-import android.os.Build
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.squareup.picasso.Picasso
 import ru.shalashov.film_for_evening.R
 import ru.shalashov.film_for_evening.databinding.FragmentDetailsBinding
 import ru.shalashov.film_for_evening.model.Film
-import ru.shalashov.film_for_evening.model.FilmDTO
+import ru.shalashov.film_for_evening.utils.showSnackBar
 import ru.shalashov.film_for_evening.viewModel.AppState
 import ru.shalashov.film_for_evening.viewModel.DetailsViewModel
 
@@ -43,8 +41,8 @@ class DetailsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        filmBundle = arguments?.getParcelable(BUNDLE_EXTRA)?: Film()
-        viewModel.detailsLiveData.observe(viewLifecycleOwner, Observer { renderData(it) })
+        filmBundle = arguments?.getParcelable(BUNDLE_EXTRA) ?: Film()
+        viewModel.detailsLiveData.observe(viewLifecycleOwner, { renderData(it) })
         viewModel.getFilmFromRemoteSource(filmBundle.id, YOUR_API_KEY, "ru")
     }
 
@@ -64,37 +62,38 @@ class DetailsFragment : Fragment() {
                 binding.FLFragMainLoading.visibility = View.GONE
                 binding.detailsView.showSnackBar(
                         getString(R.string.error),
-                        getString(R.string.reload)
-                ) {
+                        getString(R.string.reload),
+                {
                     viewModel.getFilmFromRemoteSource(
                             filmBundle.id,
                             YOUR_API_KEY,
                             "ru"
                     )
-                }
+                })
             }
         }
     }
 
-    private fun displayFilm(filmDTO: Film) {
+    private fun displayFilm(film: Film) {
         with(binding) {
             detailsView.visibility = View.VISIBLE
             FLFragMainLoading.visibility = View.GONE
-            tvFragDetailsFilmName.text = filmDTO.film
-            tvFragDetailsGenreValue.text = filmDTO.genre
-            tvFragDetailsCountryValue.text = filmDTO.country
-            tvFragDetailsDurationValue.text = filmDTO.duration.toString()
-            tvFragDetailsDescriptionValue.text = filmDTO.description
-            tvFragDetailsRatingValue.text = filmDTO.rating.toString()
+            tvFragDetailsFilmName.text = film.film
+            tvFragDetailsGenreValue.text = film.genre
+            tvFragDetailsCountryValue.text = film.country
+            tvFragDetailsDurationValue.text = film.duration.toString()
+            tvFragDetailsDescriptionValue.text = film.description
+            tvFragDetailsRatingValue.text = film.rating.toString()
+            Picasso
+                    .get()
+                    .load(film.poster_path)
+                    .into(ivFragDetailsPoster)
         }
     }
+
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
-}
-
-private fun ConstraintLayout.showSnackBar(string: String, string1: String, function: () -> Unit) {
-
 }

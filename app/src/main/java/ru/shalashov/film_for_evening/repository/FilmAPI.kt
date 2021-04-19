@@ -8,7 +8,7 @@ import ru.shalashov.film_for_evening.model.FilmDTO
 interface FilmAPI {
     @GET("3/movie")
     fun getFilm(
-        @Path("movie_id") id: Int,
+        @Query("movie_id") id: Int,
         @Query("api_key") api_key: String,
         @Query("language") language: String
     ): retrofit2.Call<FilmDTO>
